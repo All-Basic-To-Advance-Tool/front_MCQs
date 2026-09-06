@@ -11644,12 +11644,14 @@
       window.onload = async function () {
         try {
           const saved = localStorage.getItem("upsc_student");
-          if (saved) {
+   if (saved) {
             student = JSON.parse(saved);
+            window.student = student;
             updateProfileFAB();
           }
         } catch (e) {
           student = null;
+          window.student = null;
         }
 
         initActiveStudentTracking(); // 🔵 fire-and-forget — page render isse kabhi wait nahi karta
@@ -16212,7 +16214,8 @@
           } catch (e) {
             /* ignore */
           }
-          student = { id, name, mobile, gender: selectedGender };
+         student = { id, name, mobile, gender: selectedGender };
+          window.student = student;
           localStorage.setItem("upsc_student", JSON.stringify(student));
           updateProfileFAB();
           // ✅ FIX: agar student Pricing page se yahan register karne aaya tha, to
@@ -16506,7 +16509,8 @@
           dpUrl: "",
         });
         if (r.ok) {
-          student = { ...student, name, mobile, gender: selectedGenderEdit };
+         student = { ...student, name, mobile, gender: selectedGenderEdit };
+          window.student = student;
           localStorage.setItem("upsc_student", JSON.stringify(student));
           updateProfileFAB();
           loadPasswordScreen();
@@ -16691,8 +16695,9 @@
       function logoutStudent() {
         closeDropdown();
         endActiveStudentSession(); // 🔵 turant close — 90s server-timeout ka wait nahi (spec rule #25)
-        localStorage.removeItem("upsc_student"); // ✅ sirf local se — sheet me data waisa hi rehta hai
+         localStorage.removeItem("upsc_student"); // ✅ sirf local se — sheet me data waisa hi rehta hai
         student = null;
+        window.student = null;
         selectedGender = "";
         currentUserEmail = "";
         document.getElementById("profileFab").style.display = "none";
@@ -16702,11 +16707,11 @@
 
       function closeDropdownAndNewReg() {
         closeDropdown();
-        localStorage.removeItem("upsc_student");
+         localStorage.removeItem("upsc_student");
         student = null;
+        window.student = null;
         selectedGender = "";
-        document.getElementById("regName").value = "";
-        document.getElementById("regMobile").value = "";
+        document.getElementById("regName").value = "";        document.getElementById("regMobile").value = "";
         document.getElementById("gBoy").className = "gender-opt";
         document.getElementById("gGirl").className = "gender-opt";
         document.getElementById("profileFab").style.display = "none";
